@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
+use App\Rules\UniqueCompanyRule;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -14,7 +15,9 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        return JWTAuth::user();
+        $companies = Company::where('user_id', auth()->id())->get();
+
+        return response()->json($companies, 200);
     }
 
     /**
@@ -23,14 +26,13 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'razon_social' => 'required|string|max:255',
-            'ruc' => 'required|string|max:255',
-            /* 'ruc' => [
+            'razon_social' => 'required|string|max:255',         
+            'ruc' => [
                 'required',
                 'string',
                 'regex:/^(10|20)\d{9}$/',
                 new UniqueCompanyRule(),
-            ], */
+            ],
             'direccion' => 'required|string|max:255',
             'logo' => 'nullable|file|image',
             'sol_user' => 'required|string|max:255',
@@ -59,9 +61,13 @@ class CompanyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Company $company)
+    public function show($company)
     {
-        //
+        $company = Company::where('ruc', $company)
+                    ->where('user_id', auth()->id())
+                    ->firstOrFail();
+
+        return response()->json($company, 200);
     }
 
     /**
