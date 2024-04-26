@@ -31,6 +31,6 @@ Route::post('me', [AuthController::class, 'me']);
 
 Route::apiResource('companies', CompanyController::class)->middleware('auth:api');
 
-Route::post('invoices/send', [InvoiceController::class, 'send'])->middleware('auth:api');
+/* Route::post('invoices/send', [InvoiceController::class, 'send'])->middleware('auth:api');
 Route::post('invoices/xml', [InvoiceController::class, 'xml'])->middleware('auth:api');
-Route::post('invoices/pdf', [InvoiceController::class, 'pdf'])->middleware('auth:api');
+Route::post('invoices/pdf', [InvoiceController::class, 'pdf'])->middleware('auth:api'); */

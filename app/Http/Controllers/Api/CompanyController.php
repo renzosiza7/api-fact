@@ -73,9 +73,44 @@ class CompanyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Company $company)
+    public function update(Request $request, $company)
     {
-        //
+        $company = Company::where('ruc', $company)
+                        ->where('user_id', auth()->id())
+                        ->firstOrFail();
+
+        $data = $request->validate([
+            'razon_social' => 'nullable|string|max:255',
+            'ruc' => [
+                'nullable',
+                'string',
+                'regex:/^(10|20)\d{9}$/',
+                new UniqueCompanyRule($company->id),
+            ],
+            'direccion' => 'nullable|string|max:255',
+            'logo' => 'nullable|file|image',
+            'sol_user' => 'nullable|string|max:255',
+            'sol_pass' => 'nullable|string|max:255',
+            'cert' => 'nullable|file|mimes:pem,txt',
+            'client_id' => 'nullable|string|max:255',
+            'client_secret' => 'nullable|string|max:255',
+            'production' => 'nullable|boolean',
+        ]);
+
+        if ($request->hasFile('logo')) {
+            $data['logo_path'] = $request->file('logo')->store('logos');
+        }
+
+        if ($request->hasFile('cert')) {
+            $data['cert_path'] = $request->file('cert')->store('certs');
+        }
+
+        $company->update($data);
+
+        return response()->json([
+            'message' => 'Empresa actualizada correctamente',
+            'company' => $company,
+        ], 200);
     }
 
     /**
