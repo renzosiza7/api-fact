@@ -140,7 +140,6 @@ class SunatService
 
     public function sunatResponse($result)
     {
-
         $response['success'] = $result->isSuccess();
 
         // Verificamos que la conexión con SUNAT fue exitosa.
