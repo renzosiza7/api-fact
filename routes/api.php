@@ -8,8 +8,6 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\InvoiceController;
 
-
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -25,6 +23,7 @@ use App\Http\Controllers\Api\InvoiceController;
     return $request->user();
 });
  */
+
 Route::post('register', [RegisterController::class, 'store']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout']);
