@@ -116,8 +116,16 @@ class CompanyController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Company $company)
+    public function destroy($company)
     {
-        //
+        $company = Company::where('ruc', $company)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        $company->delete();
+
+        return response()->json([
+            'message' => 'Empresa eliminada correctamente',
+        ], 200);
     }
 }
